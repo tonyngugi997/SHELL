@@ -5,11 +5,17 @@ from datetime import datetime
 import subprocess
 
 from reference import ShellUI
+from utility_tools import Utils
+
 
 if os.name == "nt":
+
     os.system("")
 
 previous_directory = None
+
+global command_history
+command_history = []
 
 def fetch_prompt():
  
@@ -78,12 +84,14 @@ def handle_cd(parts):
 def shell():
     ui = ShellUI()
     ui.banner()
+    utils = Utils(command_history)
     while True:
 
         sys.stdout.write(fetch_prompt())
         sys.stdout.flush()
 
         cmd = input().strip()
+        utils.add_command(cmd)
 
         if not cmd:
             print("invalid argument")
@@ -150,6 +158,12 @@ def shell():
             subprocess.run("dir" if os.name == "nt" else "ls", shell=True)
         elif command == "cd":
             handle_cd(parts)
+
+        elif command == "history":
+            utils =  Utils(command_history)
+            print("command History:")
+            print(utils.history())
+
         else:
             print(f"invalid command: {cmd}")
 
