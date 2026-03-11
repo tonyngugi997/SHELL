@@ -2,7 +2,7 @@ import sys
 import time
 import os
 from datetime import datetime
-
+import subprocess
 if os.name == 'nt':
     os.system('')
 
@@ -68,7 +68,7 @@ def shell():
                 
         elif command == 'help':
              def get_help():
-                help_ = {
+                help = {
                     'exit': 'Exit the shell',
                     'echo': 'Print text to the console',
                     'help': 'Show this help message',
@@ -77,12 +77,15 @@ def shell():
                     'sleep': 'Pause execution for N seconds'
                 }
                 return help
-             print(help)
-        
-            
+             help_menu = get_help()
+             print('Available commands:')
+             for item, description in help_menu.items():
+                 print                                        
+                                                      
+
         elif command == 'clear':
-            os.system('cls' if os.name == 'nt' else 'clear')
-            
+            #os.system('cls' if os.name == 'nt' else 'clear')
+            subprocess.run('cls' if os.name =='nt' else 'clear' shell=True)
         elif command == 'date':
             now = datetime.now()
             print(now.strftime('%Y-%m-%d %H:%M:%S'))
@@ -100,7 +103,7 @@ def shell():
                 print('Error: sleep requires a number of seconds')
 
         elif command == 'dir':
-            os.system('dir' if os.name == 'nt' else 'ls')
+            subprocess.run('dir' if os.name == 'nt' else 'ls', shell=True)
         elif command == 'cd':
            
            if len(parts) > 1:
