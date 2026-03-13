@@ -16,3 +16,15 @@ class Utils:
             output.append(f"{index}: {command}")
 
         return "\n".join(output)
+    def grep(self,text, pattern):
+
+        result = []
+        lines  = text.split('\n')
+
+        for line in lines:
+            if pattern.lower() in line.lower():
+                result.append(line)
+        return "\n".join(result) if result else "No matches found."
+
+
+             

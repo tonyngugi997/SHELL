@@ -96,6 +96,28 @@ def shell():
         if not cmd:
             print("invalid argument")
             continue
+        handled = False
+
+        if '|' in cmd:
+            left, right = cmd.split("|", 1)
+            left = left.split()
+            right = right.split()
+
+            if left == "history" and right.startswith("grep"):
+                parts = right.split()
+                if len(parts) > 1:
+                    patern = parts[1]
+
+                    history_text = utils.history()
+
+                    result = utils.grep(history_text, patern)
+
+                    print(result)
+                    handled = True
+        if handled:
+            continue
+
+
 
         parts = cmd.split()
         command = parts[0].lower()
