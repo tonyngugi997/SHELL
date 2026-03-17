@@ -3,6 +3,10 @@ import time
 import os
 from datetime import datetime
 import subprocess
+import subprocess
+import threading
+import keyboard
+
 
 from banner import ShellUI
 from utility_tools import Utils
@@ -16,38 +20,8 @@ previous_directory = None
 global command_history
 command_history = []
 
-def fetch_prompt():
-    RESET = "\033[0m"
-    GREEN = "\033[92m"
-    CYAN = "\033[96m"
-    YELLOW = "\033[93m"
-    MAGENTA = "\033[95m"
-    DIM = "\033[2m"
-
-    user = "user"
-    host = "localhost"
-
-    current_dir = os.getcwd()
-
-    # Replace home directory with "~"
-    home = os.path.expanduser("~")
-    if current_dir.startswith(home):
-        current_dir = "~" + current_dir[len(home):]
-
-    timestamp = datetime.now().strftime("%H:%M:%S")
-
-    top = (
-        f"{DIM}╭─{RESET}"
-        f"{CYAN}[{timestamp}]{RESET}"
-        f"{DIM}─{RESET}"
-        f"{GREEN}[{user}@{host}]{RESET}"
-        f"{DIM}─{RESET}"
-        f"{YELLOW}[{current_dir}]{RESET}"
-    )
-
-    bottom = f"{DIM}╰─{RESET}{MAGENTA}➤{RESET} $ "
-
-    return f"{top}\n{bottom}"
+prompt = Utils.fetch_prompt(self=None)
+print(prompt)
 
 # Cd logic
 def handle_cd(parts):
@@ -82,8 +56,13 @@ def shell():
     ui.banner()
     utils = Utils(command_history)
     
+    listener_thread = threading.Thread(target=utils.key_listener)
+    listener_thread.daemon = True
+    listener_thread.start()
+
+    
     while True:
-        sys.stdout.write(fetch_prompt())
+        sys.stdout.write(utils.fetch_prompt())
         sys.stdout.flush()
 
         cmd = input().strip()

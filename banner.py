@@ -80,7 +80,7 @@ class ShellUI:
 {SCALE_GREEN2}                                 ║{SCALE_GREEN1}██{TONGUE_RED}██{EYE_RED}██{SCALE_GREEN1}║
 {SCALE_GREEN1}                                 ╚══════╝"""
 
-        # Ultra clear snake head for smaller terminals
+        #  for smaller terminals
         clear_snake = f"""
 {SCALE_GREEN2}                        .--=+* cobra *+=--.
 {SCALE_GREEN3}                     .+{SCALE_GREEN1}              {SCALE_GREEN3}+.
