@@ -9,6 +9,13 @@ class Utils:
     def __init__(self, history_list):
         self.command_history = history_list
         self.current_input = ""
+        self.pending_input = ""
+
+    def get_pending_command(self):
+        """Get any command waiting from keyboard thread"""
+        cmd = self.pending_command
+        self.pending_command = None  # Clear it after reading
+        return cm
 
     def add_command(self, command):
         self.command_history.append(command)
@@ -66,14 +73,34 @@ class Utils:
         bottom = f"{DIM}╰─{RESET}{MAGENTA}➤{RESET} $ "
 
         return f"{top}\n{bottom}"
+    
+    class Utils:
+        def __init__(self, history_list):
+            self.command_history = history_list
+            self.listening = True
+            self.current_input = ""  # This will store what user is typing
+            self.pending_command = None  # This will store history commands to show
+        
+    # ADD THIS NEW METHOD
+    def get_pending_command(self):
+        """Get any command waiting from keyboard thread"""
+        cmd = self.pending_command
+        self.pending_command = None  # Clear it after reading
+        return cmd
+
     def key_listener(self):
-        " listens for arrow up and down key presses to navigate command history "
-        while True:
-            def on_key_event(event):
-                if event.event_type == keyboard.KEY_DOWN:
-                    if event.name == 'up':
-                        print('up arrow pressed')
-                    elif event.name == 'down':
-                        print('down arrow pressed')
-            keyboard.hook(on_key_event)
-    threading.Event().wait(1)
+        """Watch for arrow keys in the background"""
+        import threading
+        
+        def on_key_event(event):
+            if event.event_type == keyboard.KEY_DOWN:       
+                if event.name == 'up':
+                    # For now, just set a test message
+                    self.pending_command = "TEST FROM UP ARROW"
+                    print("\n[DEBUG] Up arrow detected!")  # This will show in terminal
+                elif event.name == 'down':
+                    self.pending_command = "TEST FROM DOWN ARROW"
+                    print("\n[DEBUG] Down arrow detected!")
+        
+        keyboard.hook(on_key_event)
+        print("Keyboard listener started")
