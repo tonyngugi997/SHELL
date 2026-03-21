@@ -150,7 +150,7 @@ class ShellUI:
         
         # Contact information
         print(f"{NEON_PURPLE}║{RESET}{GOLD}{BOLD}   ║{RESET}  {SILVER}┌─{CYBER_BLUE} AUTHOR  {SILVER}─────────────────────────────────┐{RESET}                {GOLD}{BOLD}║{RESET}      {NEON_PURPLE}║")
-        print(f"{NEON_PURPLE}║{RESET}{GOLD}{BOLD}   ║{RESET}  {SILVER}│{RESET}  {GOLD}●{RESET} {BOLD}{CYBER_BLUE}Tony Ngugi{ITALIC} (The Python Whisperer){RESET}                {SILVER}│{RESET}    {GOLD}{BOLD}║{RESET}      {NEON_PURPLE}║")
+        print(f"{NEON_PURPLE}║{RESET}{GOLD}{BOLD}   ║{RESET}  {SILVER}│{RESET}  {GOLD}●{RESET} {BOLD}{CYBER_BLUE}Tony Ngugi{ITALIC} - P0w3r l!es in the Sh3ll{RESET}                {SILVER}│{RESET}    {GOLD}{BOLD}║{RESET}      {NEON_PURPLE}║")
         print(f"{NEON_PURPLE}║{RESET}{GOLD}{BOLD}   ║{RESET}  {SILVER}├─────────────────────────────────────────────────┤{RESET}    {GOLD}{BOLD}║{RESET}      {NEON_PURPLE}║")
         print(f"{NEON_PURPLE}║{RESET}{GOLD}{BOLD}   ║{RESET}  {SILVER}│{RESET}  {EYE_GLOW}◉{RESET} {UNDERLINE}GITHUB{UNDERLINE} : {CYBER_BLUE}tonyngugi997{RESET}                             {SILVER}│{RESET}    {GOLD}{BOLD}║{RESET}      {NEON_PURPLE}║")
         print(f"{NEON_PURPLE}║{RESET}{GOLD}{BOLD}   ║{RESET}  {SILVER}│{RESET}  {EYE_GLOW}◉{RESET} {UNDERLINE}EMAIL{UNDERLINE}  : {CYBER_BLUE}tonyngugi997@gmail.com{RESET}                  {SILVER}│{RESET}    {GOLD}{BOLD}║{RESET}      {NEON_PURPLE}║")
@@ -165,7 +165,7 @@ class ShellUI:
         # Stats line
         print(f"{NEON_PURPLE}║{RESET}                                                                        {NEON_PURPLE}║")
         print(f"{NEON_PURPLE}║{RESET}  {DIM}┌─────────────────────────────────────────────────────────────────────┐{RESET}   {NEON_PURPLE}║")
-        print(f"{NEON_PURPLE}║{RESET}  {DIM}│{RESET}  {SILVER}LINES OF CODE{RESET}: {GOLD}1337{RESET}  |  {SILVER}SNAKE BITES{RESET}: {EYE_RED}🐍 99+{RESET}  |  {SILVER}COBRA MODE{RESET}: {BLINK}{EYE_RED}ACTIVE{BLINK}{RESET}     {DIM}│{RESET}   {NEON_PURPLE}║")
+    
         print(f"{NEON_PURPLE}║{RESET}  {DIM}└─────────────────────────────────────────────────────────────────────┘{RESET}   {NEON_PURPLE}║")
         
         # Final border

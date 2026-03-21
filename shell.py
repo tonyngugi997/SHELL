@@ -168,6 +168,9 @@ def shell():
         elif command == "history":
             print("Command History:")
             print(utils.history())
+        
+        elif command  == 'pwd':
+            print(utils.get_current_working_dir())
 
         else:
             print(f"invalid command: {cmd}")
@@ -177,5 +180,5 @@ if __name__ == "__main__":
         shell()
     except KeyboardInterrupt:
         print("\nExiting shell...")
-        time.sleep(2)
+        time.sleep(0.2)
         sys.exit()

@@ -104,3 +104,7 @@ class Utils:
         
         keyboard.hook(on_key_event)
         print("Keyboard listener started")
+
+    def get_current_working_dir(self):
+        where_am_am_at = os.getcwd()
+        return where_am_am_at
