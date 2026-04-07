@@ -6,12 +6,6 @@ import re
 from datetime import datetime
 from colors import Colors
 
-try:
-    import readline
-    READLINE_AVAILABLE = True
-except ImportError:
-    READLINE_AVAILABLE = False
-
 HISTORY_FILE = os.path.expanduser("~/.pyshell_history")
 MAX_HISTORY = 1000
 
@@ -23,22 +17,18 @@ class ShellUtils:
         self._load_history()
 
     def _load_history(self):
-        if not READLINE_AVAILABLE:
+        if not os.path.exists(HISTORY_FILE):
             return
-        if os.path.exists(HISTORY_FILE):
-            try:
-                with open(HISTORY_FILE, 'r') as f:
-                    for line in f:
-                        cmd = line.strip()
-                        if cmd:
-                            self.command_history.append(cmd)
-                            readline.add_history(cmd)
-            except (IOError, OSError):
-                pass
+        try:
+            with open(HISTORY_FILE, 'r') as f:
+                for line in f:
+                    cmd = line.strip()
+                    if cmd:
+                        self.command_history.append(cmd)
+        except (IOError, OSError):
+            pass
 
     def _save_history(self):
-        if not READLINE_AVAILABLE:
-            return
         try:
             with open(HISTORY_FILE, 'w') as f:
                 for cmd in self.command_history[-MAX_HISTORY:]:
@@ -50,8 +40,6 @@ class ShellUtils:
         if not command or command.isspace():
             return
         self.command_history.append(command)
-        if READLINE_AVAILABLE:
-            readline.add_history(command)
         self._save_history()
 
     def get_history(self, limit=None):
@@ -90,37 +78,19 @@ class ShellUtils:
 
     def execute_external(self, args):
         try:
-            result = subprocess.run(
-                args,
-                stdin=sys.stdin,
-                stdout=sys.stdout,
-                stderr=sys.stderr,
-                text=True,
-                shell=False
-            )
+            result = subprocess.run(args, text=True)
             self.last_exit_code = result.returncode
             return result.returncode == 0
         except FileNotFoundError:
             if os.name == 'nt':
                 try:
-                    result = subprocess.run(
-                        ' '.join(args),
-                        stdin=sys.stdin,
-                        stdout=sys.stdout,
-                        stderr=sys.stderr,
-                        text=True,
-                        shell=True
-                    )
+                    result = subprocess.run(' '.join(args), shell=True, text=True)
                     self.last_exit_code = result.returncode
                     return result.returncode == 0
                 except Exception:
                     pass
             print(f"{Colors.RED}Command not found: {args[0]}{Colors.RESET}")
             self.last_exit_code = 127
-            return False
-        except PermissionError:
-            print(f"{Colors.RED}Permission denied: {args[0]}{Colors.RESET}")
-            self.last_exit_code = 126
             return False
         except Exception as e:
             print(f"{Colors.RED}Error: {e}{Colors.RESET}")

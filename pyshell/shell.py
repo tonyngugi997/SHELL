@@ -8,6 +8,18 @@ from colors import Colors
 from utils import ShellUtils
 from commands import Builtins
 
+# Handle readline for different platforms
+READLINE_AVAILABLE = False
+try:
+    import pyreadline as readline
+    READLINE_AVAILABLE = True
+except ImportError:
+    try:
+        import readline
+        READLINE_AVAILABLE = True
+    except ImportError:
+        pass
+
 
 class ProfessionalShell:
     def __init__(self):
@@ -32,6 +44,15 @@ class ProfessionalShell:
         }
 
         signal.signal(signal.SIGINT, self._handle_sigint)
+        
+        # Tab completion - only works on Linux/Mac with GNU readline
+        if READLINE_AVAILABLE and os.name != 'nt':
+            try:
+                import rlcompleter
+                readline.parse_and_bind("tab: complete")
+                print("Tab completion enabled")
+            except:
+                pass
 
     def _get_executor(self):
         def executor(cmd_str):
