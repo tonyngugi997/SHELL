@@ -15,6 +15,49 @@ class ShellUtils:
         self.command_history = []
         self.last_exit_code = 0
         self._load_history()
+        self.aliases = {}
+        self._load_history()
+        self._load_aliases()
+
+    ALIASES_FILE = os.path.expanduser("~/.pyshell_aliases")
+
+    def _load_aliases(self):
+        """Load aliases from file"""
+        if not os.path.exists(self.ALIASES_FILE):
+            return
+        try:
+            with open(self.ALIASES_FILE, 'r') as f:
+                for line in f:
+                    line = line.strip()
+                    if line and '=' in line:
+                        name, value = line.split('=', 1)
+                        self.aliases[name] = value
+        except (IOError, OSError):
+            pass
+
+    def _save_aliases(self):
+        """Save aliases to file"""
+        try:
+            with open(self.ALIASES_FILE, 'w') as f:
+                for name, value in self.aliases.items():
+                    f.write(f"{name}={value}\n")
+        except (IOError, OSError):
+            pass
+
+    def expand_alias(self, cmd):
+        """Expand alias if command matches"""
+        parts = cmd.split()
+        if not parts:
+            return cmd
+        first = parts[0]
+        if first in self.aliases:
+            alias_cmd = self.aliases[first]
+            rest = ' '.join(parts[1:]) if len(parts) > 1 else ''
+            if rest:
+                return f"{alias_cmd} {rest}"
+            return alias_cmd
+        return cmd
+
 
     def _load_history(self):
         if not os.path.exists(HISTORY_FILE):

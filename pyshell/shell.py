@@ -41,6 +41,8 @@ class ProfessionalShell:
             'help': self.builtins.cmd_help,
             '?': self.builtins.cmd_help,
             'repeat': self.builtins.cmd_repeat,
+            'alias': self.builtins.cmd_alias,
+            'unalias': self.builtins.cmd_unalias,
         }
 
         signal.signal(signal.SIGINT, self._handle_sigint)
@@ -149,6 +151,9 @@ class ProfessionalShell:
         if not cmd or cmd.isspace():
             return True
 
+        # Expand aliases FIRST
+        cmd = self.utils.expand_alias(cmd)
+        
         cmd = self.utils.expand_vars(cmd)
 
         try:

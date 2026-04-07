@@ -167,3 +167,60 @@ class Builtins:
 
         utils.last_exit_code = 0 if success else 1
         return success
+    
+    @staticmethod
+    def cmd_alias(args, utils, executor=None):
+        """Create or show aliases"""
+        if not args:
+            # Show all aliases
+            if not utils.aliases:
+                print(f"{Colors.DIM}No aliases defined{Colors.RESET}")
+            else:
+                print(f"{Colors.BOLD}Aliases:{Colors.RESET}")
+                for name, cmd in utils.aliases.items():
+                    print(f"  {Colors.GREEN}{name}{Colors.RESET} = '{cmd}'")
+            utils.last_exit_code = 0
+            return True
+        
+        # Parse alias name=value
+        alias_str = ' '.join(args)
+        if '=' not in alias_str:
+            print(f"{Colors.RED}Usage: alias name='command'{Colors.RESET}")
+            utils.last_exit_code = 1
+            return False
+        
+        name, value = alias_str.split('=', 1)
+        name = name.strip()
+        value = value.strip().strip("'\"")
+        
+        if not name:
+            print(f"{Colors.RED}Error: alias name cannot be empty{Colors.RESET}")
+            utils.last_exit_code = 1
+            return False
+        
+        utils.aliases[name] = value
+        utils._save_aliases()
+        print(f"{Colors.GREEN}Alias created: {name} -> '{value}'{Colors.RESET}")
+        utils.last_exit_code = 0
+        return True
+    
+    @staticmethod
+    def cmd_unalias(args, utils, executor=None):
+        """Remove an alias"""
+        if not args:
+            print(f"{Colors.RED}Usage: unalias <name>{Colors.RESET}")
+            utils.last_exit_code = 1
+            return False
+        
+        name = args[0]
+        if name in utils.aliases:
+            del utils.aliases[name]
+            utils._save_aliases()
+            print(f"{Colors.GREEN}Removed alias: {name}{Colors.RESET}")
+        else:
+            print(f"{Colors.RED}Alias not found: {name}{Colors.RESET}")
+            utils.last_exit_code = 1
+            return False
+        
+        utils.last_exit_code = 0
+        return True
