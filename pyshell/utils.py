@@ -1,9 +1,10 @@
-# pyshell/utils.py
+# utils.py
 import os
 import sys
 import subprocess
+import re
 from datetime import datetime
-from .colors import Colors
+from colors import Colors
 
 try:
     import readline
@@ -16,8 +17,6 @@ MAX_HISTORY = 1000
 
 
 class ShellUtils:
-    """Utility functions for the shell"""
-
     def __init__(self):
         self.command_history = []
         self.last_exit_code = 0
@@ -61,7 +60,6 @@ class ShellUtils:
         return self.command_history
 
     def expand_vars(self, cmd):
-        import re
         def replace_var(match):
             var_name = match.group(1) or match.group(2)
             return os.environ.get(var_name, '')
@@ -103,6 +101,20 @@ class ShellUtils:
             self.last_exit_code = result.returncode
             return result.returncode == 0
         except FileNotFoundError:
+            if os.name == 'nt':
+                try:
+                    result = subprocess.run(
+                        ' '.join(args),
+                        stdin=sys.stdin,
+                        stdout=sys.stdout,
+                        stderr=sys.stderr,
+                        text=True,
+                        shell=True
+                    )
+                    self.last_exit_code = result.returncode
+                    return result.returncode == 0
+                except Exception:
+                    pass
             print(f"{Colors.RED}Command not found: {args[0]}{Colors.RESET}")
             self.last_exit_code = 127
             return False
