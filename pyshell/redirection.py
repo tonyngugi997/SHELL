@@ -3,6 +3,29 @@
 
 
 class RedirectionParser:
+    @staticmethod
+    def open_redirection(filepath, append=False, is_input=False):
+        """Open file for redirection with proper error handling"""
+        if is_input:
+            try:
+                return open(filepath, 'r')
+            except FileNotFoundError:
+                print(f"Error: file not found: {filepath}")
+                return None
+            except PermissionError:
+                print(f"Error: permission denied: {filepath}")
+                return None
+        else:
+            mode = 'a' if append else 'w'
+            try:
+                return open(filepath, mode)
+            except PermissionError:
+                print(f"Error: permission denied: {filepath}")
+                return None
+            except IsADirectoryError:
+                print(f"Error: is a directory: {filepath}")
+                return None
+            
     """Parse and handle shell redirections"""
     @staticmethod
     def parse(args):
