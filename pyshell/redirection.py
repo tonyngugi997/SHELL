@@ -55,6 +55,16 @@ class RedirectionParser:
                 append_stderr = False
                 i += 2
                 continue
+
+                        # Stderr append: 2>> filename
+            elif arg == '2>>':
+                if i + 1 >= len(args):
+                    print("Error: missing filename for 2>>")
+                    return None, None, None, None, False, False
+                stderr_file = args[i + 1]
+                append_stderr = True
+                i += 2
+                continue
             
             else:
                 new_args.append(arg)
