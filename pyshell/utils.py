@@ -5,6 +5,7 @@ import subprocess
 import re
 from datetime import datetime
 from colors import Colors
+from redirection import *
 
 HISTORY_FILE = os.path.expanduser("~/.pyshell_history")
 MAX_HISTORY = 1000
