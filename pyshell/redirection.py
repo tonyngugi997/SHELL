@@ -26,6 +26,17 @@ class RedirectionParser:
                 append_stdout = False
                 i += 2
                 continue
+
+
+            # Append redirection: >> filename
+            elif arg == '>>':
+                if i + 1 >= len(args):
+                    print("Error: missing filename for >>")
+                    return None, None, None, None, False, False
+                stdout_file = args[i + 1]
+                append_stdout = True
+                i += 2
+                continue
             
             else:
                 new_args.append(arg)
