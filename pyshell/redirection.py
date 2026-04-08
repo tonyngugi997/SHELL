@@ -27,7 +27,6 @@ class RedirectionParser:
                 i += 2
                 continue
 
-
             # Append redirection: >> filename
             elif arg == '>>':
                 if i + 1 >= len(args):
@@ -35,6 +34,25 @@ class RedirectionParser:
                     return None, None, None, None, False, False
                 stdout_file = args[i + 1]
                 append_stdout = True
+                i += 2
+                continue
+            
+            # Input redirection: < filename
+            elif arg == '<':
+                if i + 1 >= len(args):
+                    print("Error: missing filename for <")
+                    return None, None, None, None, False, False
+                stdin_file = args[i + 1]
+                i += 2
+                continue
+            
+            # Stderr redirection: 2> filename
+            elif arg == '2>':
+                if i + 1 >= len(args):
+                    print("Error: missing filename for 2>")
+                    return None, None, None, None, False, False
+                stderr_file = args[i + 1]
+                append_stderr = False
                 i += 2
                 continue
             
