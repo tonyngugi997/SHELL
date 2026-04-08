@@ -65,6 +65,19 @@ class RedirectionParser:
                 append_stderr = True
                 i += 2
                 continue
+
+
+                        # Combined stdout+stderr: &> filename
+            elif arg == '&>':
+                if i + 1 >= len(args):
+                    print("Error: missing filename for &>")
+                    return None, None, None, None, False, False
+                stdout_file = args[i + 1]
+                stderr_file = args[i + 1]
+                append_stdout = False
+                append_stderr = False
+                i += 2
+                continue
             
             else:
                 new_args.append(arg)
