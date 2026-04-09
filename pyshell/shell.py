@@ -1,4 +1,5 @@
 # shell.py
+import cmd
 import os
 import sys
 import shlex
@@ -157,7 +158,8 @@ class ProfessionalShell:
         cmd = self.utils.expand_vars(cmd)
 
         try:
-            parts = shlex.split(cmd)
+            cmd_for_parsing = cmd.replace('\n', ' ')
+            parts = shlex.split(cmd_for_parsing)
         except ValueError as e:
             print(f"{Colors.RED}Error: {e}{Colors.RESET}")
             self.utils.last_exit_code = 1
