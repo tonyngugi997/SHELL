@@ -166,3 +166,21 @@ class ShellUtils:
         finally:
             if stdin_handle:
                 stdin_handle.close()
+
+    def is_unclosed_quote(self, text):
+        """Check if text has unclosed quotes"""
+        in_single = False
+        in_double = False
+        i = 0
+        while i < len(text):
+            ch = text[i]
+            if ch == '\\' and i + 1 < len(text):
+                # Skip escaped characters
+                i += 2
+                continue
+            elif ch == "'" and not in_double:
+                in_single = not in_single
+            elif ch == '"' and not in_single:
+                in_double = not in_double
+            i += 1
+        return in_single or in_double
