@@ -5,53 +5,25 @@ import signal
 import subprocess
 from colors import Colors
 
-
 def jobs_cmd(args, utils, job_table):
-    """List all jobs (like bash's jobs command)"""
-    # First, update status of all jobs
-    for job_id, job in job_table.jobs.items():
-        if hasattr(job, 'process_obj') and job.process_obj:
-            poll = job.process_obj.poll()
-            if poll is not None and job.state != "terminated":
-                # Job has finished
-                job.terminate(poll)
+    """List all jobs with professional dashboard display"""
+    from .job_display import JobDisplay
     
-    jobs = job_table.list_all()
+    # Parse arguments
+    watch_mode = False
     
-    if not jobs:
-        # No jobs - no output (bash doesn't print anything)
-        return True
+    if args:
+        for arg in args:
+            if arg == '-w' or arg == '--watch':
+                watch_mode = True
     
-    for job in jobs:
-        # Determine status and formatting like bash
-        if job.state == "terminated":
-            if job.exit_code == 0:
-                status = "Done"
-            else:
-                status = f"Done({job.exit_code})"
-            color = Colors.DIM
-        elif job.state == "stopped":
-            status = "Stopped"
-            color = Colors.YELLOW
-        else:  # running
-            status = "Running"
-            color = Colors.GREEN
-        
-        # Marker for current/previous job (like bash: + and -)
-        marker = ""
-        if job_table.current_job and job_table.current_job.job_id == job.job_id:
-            marker = "+"
-        elif job_table.previous_job and job_table.previous_job.job_id == job.job_id:
-            marker = "-"
-        
-        # Format like bash: [1]+  Running  ping 127.0.0.1 &
-        print(f"[{job.job_id}]{marker}  {color}{status}{Colors.RESET}  {job.command}")
+    display = JobDisplay(job_table)
     
-    # Mark finished jobs for cleanup (but don't remove yet)
-    for job_id, job in job_table.jobs.items():
-        if job.state == "terminated" and not hasattr(job, '_cleanup_ready'):
-            # First time showing this finished job
-            job._cleanup_ready = True
+    if watch_mode:
+        # Use the watch method which handles Ctrl+C properly
+        display.watch_jobs()
+    else:
+        display.display_jobs()
     
     return True
 
@@ -78,7 +50,7 @@ def fg(args, utils, job_table, terminal):
     
     print(f"{Colors.YELLOW}fg: {job.command}{Colors.RESET}")
     
-    # On Unix-like systems, we would bring to foreground
+    # On Unix, we'd send SIGCONT and wait for it to finish
     # On Windows, we just wait for it
     if hasattr(job, 'process_obj') and job.process_obj:
         try:

@@ -5,6 +5,7 @@ import time
 import signal
 import sys
 from colors import Colors
+import os
 
 
 class SignalHandler:

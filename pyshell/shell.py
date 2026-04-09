@@ -9,6 +9,9 @@ from colors import Colors
 from utils import ShellUtils
 from commands import Builtins
 
+import colorama
+colorama.init()
+
 # Job control imports
 from jobs import JobTable, TerminalController, SignalHandler
 from jobs import run_foreground, run_background
