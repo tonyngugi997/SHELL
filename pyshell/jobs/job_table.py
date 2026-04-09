@@ -1,6 +1,6 @@
 """JobTable - manages all active jobs"""
 
-from .job import Job
+from .jobs import Job
 
 
 class JobTable:
