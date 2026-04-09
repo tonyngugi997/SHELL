@@ -9,6 +9,8 @@ from colors import Colors
 from utils import ShellUtils
 from commands import Builtins
 
+from jobs import JobTable, TerminalController
+
 # Handle readline for different platforms
 READLINE_AVAILABLE = False
 try:
@@ -28,6 +30,9 @@ class ProfessionalShell:
         self.builtins = Builtins()
         self.running = True
         self._executor = self._get_executor()
+        # Initialize job control
+        self.job_table = JobTable()
+        self.terminal = TerminalController()
 
         self.builtin_commands = {
             'exit': self.builtins.cmd_exit,
