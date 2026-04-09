@@ -8,6 +8,8 @@ import subprocess
 from colors import Colors
 from utils import ShellUtils
 from commands import Builtins
+from jobs import SignalHandler
+
 
 from jobs import JobTable, TerminalController
 
@@ -33,6 +35,9 @@ class ProfessionalShell:
         # Initialize job control
         self.job_table = JobTable()
         self.terminal = TerminalController()
+        # After self.terminal = TerminalController()
+        self.signal_handler = SignalHandler(self.job_table)
+        self.signal_handler.setup()
 
         self.builtin_commands = {
             'exit': self.builtins.cmd_exit,
