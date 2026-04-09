@@ -79,11 +79,14 @@ class ShellUtils:
                     f.write(cmd + '\n')
         except (IOError, OSError):
             pass
+    
 
     def add_command(self, command):
         if not command or command.isspace():
             return
-        self.command_history.append(command)
+        # Store multi-line commands as single line (replace newlines with \n)
+        stored_cmd = command.replace('\n', '\\n')
+        self.command_history.append(stored_cmd)
         self._save_history()
 
     def get_history(self, limit=None):
