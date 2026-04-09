@@ -181,10 +181,28 @@ class ProfessionalShell:
         command = parts[0].lower()
         args = parts[1:]
 
+        # Check for background execution (&)
+        is_background = False
+        if parts and parts[-1] == '&':
+            is_background = True
+            parts = parts[:-1]  # Remove the '&'
+            if not parts:
+                print(f"{Colors.RED}Error: no command after &{Colors.RESET}")
+                return False
+
         if command in self.builtin_commands:
+            # Builtin commands can't be backgrounded (they run in shell process)
+            if is_background:
+                print(f"{Colors.YELLOW}Warning: builtin '{command}' cannot be backgrounded{Colors.RESET}")
             return self.builtin_commands[command](args, self.utils, self._executor)
 
-        return self.utils.execute_external(parts)
+        # External command - route to foreground or background
+        if is_background:
+            from jobs.background import run_background
+            return run_background(parts, self.job_table, self.terminal)
+        else:
+            from jobs.foreground import run_foreground
+            return run_foreground(parts, self.job_table, self.terminal)
 
     def run(self):
         self._print_banner()
