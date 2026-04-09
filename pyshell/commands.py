@@ -7,6 +7,28 @@ from colors import Colors
 
 class Builtins:
     @staticmethod
+    def cmd_sleep(args, utils, executor=None):
+        """Sleep for N seconds (built-in, works on all platforms)"""
+        if not args:
+            print(f"{Colors.RED}Usage: sleep <seconds>{Colors.RESET}")
+            utils.last_exit_code = 1
+            return False
+        
+        try:
+            seconds = float(args[0])
+            if seconds <= 0:
+                print(f"{Colors.YELLOW}Sleep: ignoring non-positive value{Colors.RESET}")
+                return True
+            
+            import time
+            time.sleep(seconds)
+            utils.last_exit_code = 0
+            return True
+        except ValueError:
+            print(f"{Colors.RED}Error: invalid number: {args[0]}{Colors.RESET}")
+            utils.last_exit_code = 1
+            return False
+    @staticmethod
     def cmd_exit(args, utils, executor=None):
         print("Goodbye!")
         sys.exit(0)

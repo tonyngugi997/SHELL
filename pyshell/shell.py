@@ -8,10 +8,11 @@ import subprocess
 from colors import Colors
 from utils import ShellUtils
 from commands import Builtins
-from jobs import SignalHandler
 
-
-from jobs import JobTable, TerminalController
+# Job control imports
+from jobs import JobTable, TerminalController, SignalHandler
+from jobs import run_foreground, run_background
+from jobs import jobs_cmd, fg, bg, kill_cmd
 
 # Handle readline for different platforms
 READLINE_AVAILABLE = False
@@ -54,6 +55,11 @@ class ProfessionalShell:
             'repeat': self.builtins.cmd_repeat,
             'alias': self.builtins.cmd_alias,
             'unalias': self.builtins.cmd_unalias,
+            'jobs': lambda a, u, e: jobs_cmd(a, u, self.job_table),
+            'fg': lambda a, u, e: fg(a, u, self.job_table, self.terminal),
+            'bg': lambda a, u, e: bg(a, u, self.job_table, self.terminal),
+            'kill': lambda a, u, e: kill_cmd(a, u, self.job_table, self.terminal),
+            'sleep': self.builtins.cmd_sleep,
         }
 
         signal.signal(signal.SIGINT, self._handle_sigint)
