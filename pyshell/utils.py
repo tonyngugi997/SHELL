@@ -121,22 +121,22 @@ class ShellUtils:
         return prompt
 
     def execute_external(self, args):
-        try:
-            result = subprocess.run(args, text=True)
-            self.last_exit_code = result.returncode
-            return result.returncode == 0
-        except FileNotFoundError:
-            if os.name == 'nt':
-                try:
-                    result = subprocess.run(' '.join(args), shell=True, text=True)
-                    self.last_exit_code = result.returncode
-                    return result.returncode == 0
-                except Exception:
-                    pass
-            print(f"{Colors.RED}Command not found: {args[0]}{Colors.RESET}")
-            self.last_exit_code = 127
+        """Execute external command with redirection support (TESTING PHASE)"""
+        # Parse redirections
+        new_args, stdin_file, stdout_file, stderr_file, append_stdout, append_stderr = RedirectionParser.parse(args)
+        
+        if new_args is None:
             return False
-        except Exception as e:
-            print(f"{Colors.RED}Error: {e}{Colors.RESET}")
-            self.last_exit_code = 1
+        
+        if not new_args:
+            print(f"{Colors.RED}Error: no command specified{Colors.RESET}")
             return False
+        
+        # For now, just print what we parsed to verify it works
+        print(f"{Colors.DIM}[DEBUG] Command: {new_args}{Colors.RESET}")
+        print(f"{Colors.DIM}[DEBUG] Stdin from: {stdin_file}{Colors.RESET}")
+        print(f"{Colors.DIM}[DEBUG] Stdout to: {stdout_file} (append={append_stdout}){Colors.RESET}")
+        print(f"{Colors.DIM}[DEBUG] Stderr to: {stderr_file} (append={append_stderr}){Colors.RESET}")
+        
+        self.last_exit_code = 0
+        return True
