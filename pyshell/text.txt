@@ -1,0 +1,20 @@
+ Volume in drive C has no label.
+ Volume Serial Number is 3CCC-2927
+
+ Directory of C:\Users\till2\Desktop\REPOS\SHELL\pyshell
+
+04/09/2026  08:44 AM    <DIR>          .
+04/09/2026  08:44 AM    <DIR>          ..
+04/07/2026  11:36 AM               272 colors.py
+04/07/2026  11:50 AM             7,960 commands.py
+04/07/2026  11:52 AM             1,438 completer.py
+04/07/2026  12:03 PM    <DIR>          home
+04/08/2026  04:31 PM             4,373 redirection.py
+04/07/2026  11:47 AM             6,501 shell.py
+04/09/2026  08:30 AM               823 test.txt
+04/09/2026  08:44 AM                 0 text.txt
+04/09/2026  08:27 AM             4,935 utils.py
+04/07/2026  12:02 PM               104 __init__.py
+04/09/2026  08:29 AM    <DIR>          __pycache__
+               9 File(s)         26,406 bytes
+               4 Dir(s)  388,137,021,440 bytes free
