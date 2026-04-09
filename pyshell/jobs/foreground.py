@@ -1,12 +1,11 @@
 """Foreground job execution - Windows compatible"""
 
 import subprocess
-import sys
 from colors import Colors
 
 
 def run_foreground(parts, job_table, terminal):
-    """Run command in foreground using subprocess (Windows compatible)"""
+    """Run command in foreground using subprocess"""
     if not parts:
         return True
     
