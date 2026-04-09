@@ -183,7 +183,20 @@ class ProfessionalShell:
                 sys.stdout.flush()
 
                 try:
-                    cmd = input().strip()
+                    # Get first line
+                    first_line = input()
+                    cmd = first_line
+                    
+                    # Check for unclosed quotes
+                    while self.utils.is_unclosed_quote(cmd):
+                        # Show continuation prompt
+                        sys.stdout.write(self.utils.get_continuation_prompt())
+                        sys.stdout.flush()
+                        next_line = input()
+                        cmd += '\n' + next_line
+                    
+                    cmd = cmd.strip()
+                    
                 except EOFError:
                     print("\nGoodbye!")
                     break
