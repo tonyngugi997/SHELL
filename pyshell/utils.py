@@ -121,8 +121,7 @@ class ShellUtils:
         return prompt
 
     def execute_external(self, args):
-        """Execute external command with redirection support (TESTING PHASE)"""
-        # Parse redirections
+        """Execute external command with stdin redirection"""
         new_args, stdin_file, stdout_file, stderr_file, append_stdout, append_stderr = RedirectionParser.parse(args)
         
         if new_args is None:
@@ -132,11 +131,38 @@ class ShellUtils:
             print(f"{Colors.RED}Error: no command specified{Colors.RESET}")
             return False
         
-        # For now, just print what we parsed to verify it works
-        print(f"{Colors.DIM}[DEBUG] Command: {new_args}{Colors.RESET}")
-        print(f"{Colors.DIM}[DEBUG] Stdin from: {stdin_file}{Colors.RESET}")
-        print(f"{Colors.DIM}[DEBUG] Stdout to: {stdout_file} (append={append_stdout}){Colors.RESET}")
-        print(f"{Colors.DIM}[DEBUG] Stderr to: {stderr_file} (append={append_stderr}){Colors.RESET}")
+        # Open stdin file if specified
+        stdin_handle = None
+        if stdin_file:
+            stdin_handle = RedirectionParser.open_redirection(stdin_file, is_input=True)
+            if stdin_handle is None:
+                return False
         
-        self.last_exit_code = 0
-        return True
+        try:
+            result = subprocess.run(
+                new_args,
+                stdin=stdin_handle or None,
+                text=True,
+                capture_output=True
+            )
+            
+            # Print output (no file redirection yet)
+            if result.stdout:
+                print(result.stdout, end='')
+            if result.stderr:
+                print(f"{Colors.RED}{result.stderr}{Colors.RESET}", end='')
+            
+            self.last_exit_code = result.returncode
+            return result.returncode == 0
+            
+        except FileNotFoundError:
+            print(f"{Colors.RED}Command not found: {new_args[0]}{Colors.RESET}")
+            self.last_exit_code = 127
+            return False
+        except Exception as e:
+            print(f"{Colors.RED}Error: {e}{Colors.RESET}")
+            self.last_exit_code = 1
+            return False
+        finally:
+            if stdin_handle:
+                stdin_handle.close()
