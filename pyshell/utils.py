@@ -184,3 +184,7 @@ class ShellUtils:
                 in_double = not in_double
             i += 1
         return in_single or in_double
+    
+    def get_continuation_prompt(self):
+        """Return continuation prompt for multi-line input"""
+        return f"{Colors.DIM}└─{Colors.RESET}{Colors.MAGENTA}➤{Colors.RESET} {Colors.CYAN}> {Colors.RESET}"
